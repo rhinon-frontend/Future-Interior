@@ -244,7 +244,7 @@ export const designGallery = [
   },
   {
     id: 4,
-    image: "/Trending4.webp",
+    image: "/trending4.webp",
     description: "Innovative staircase with hidden pull-out drawers.",
   },
   {

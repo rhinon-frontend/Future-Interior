@@ -11,11 +11,22 @@ import {
 import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import React from "react";
+import { motion } from "framer-motion";
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
 
 const Testimonials = () => {
   return (
     <section className="w-full bg-[#49543e] py-24">
-      <div className="mx-auto px-4 flex flex-col items-center gap-10 text-white">
+      <motion.div
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      className="space-y-4 text-center mx-auto px-4 flex flex-col items-center gap-10 text-white">
         {/* Section Header */}
         <div className="space-y-4 text-center">
           <h2 className="text-4xl font-bold uppercase text-white">
@@ -60,7 +71,7 @@ const Testimonials = () => {
             </CarouselContent>
           </div>
         </Carousel>
-      </div>
+      </motion.div>
     </section>
   );
 };

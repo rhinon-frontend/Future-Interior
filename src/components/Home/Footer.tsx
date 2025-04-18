@@ -1,11 +1,19 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { Instagram } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#000000] text-gray-300 py-16 px-6">
+    <motion.footer
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true }}
+      className="bg-[#000000] text-gray-300 py-16 px-6"
+    >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Logo + Tagline */}
         <div>
@@ -77,7 +85,7 @@ const Footer = () => {
       <div className="text-center text-sm text-gray-500 mt-12 border-t border-gray-700 pt-6">
         © {new Date().getFullYear()} Future Interior. All rights reserved.
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

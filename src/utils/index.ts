@@ -303,3 +303,46 @@ export const faqs = [
       "Yes, we specialize in both residential interiors (homes, apartments, villas) and commercial projects (offices, studios, showrooms, etc.).",
   },
 ];
+
+export const items = [
+  {
+    id: "living_room",
+    label: "Living Room",
+  },
+  {
+    id: "bedroom",
+    label: "Bedroom",
+  },
+  {
+    id: "kitchen",
+    label: "Kitchen",
+  },
+  {
+    id: "bathroom",
+    label: "Bathroom",
+  },
+  {
+    id: "dining_area",
+    label: "Dining Area",
+  },
+  {
+    id: "modular_wardrobe",
+    label: "Modular Wardrobe",
+  },
+  {
+    id: "tv_unit",
+    label: "TV Unit",
+  },
+  {
+    id: "false_ceiling",
+    label: "False Ceiling",
+  },
+  {
+    id: "lighting",
+    label: "Lighting",
+  },
+  {
+    id: "wall_decor",
+    label: "Wall Decor",
+  },
+] as const;

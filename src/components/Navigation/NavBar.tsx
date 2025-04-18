@@ -2,14 +2,17 @@
 
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   return (
     <nav
-      className={`relative z-[1000] py-6 text-white transition-colors duration-300 ${
-        isOpen ? "bg-[#49543e]" : "bg-transparent"
+      className={`relative z-[1000] py-6 transition-colors duration-300 ${
+        isOpen ? "bg-[#49543e]" : isHome ? "bg-transparent" : "bg-red-500"
       }`}
     >
       <div className="w-full max-w-7xl mx-auto px-5">
@@ -20,7 +23,11 @@ const NavBar = () => {
             gridTemplateColumns: "1fr 0.7fr 1fr",
           }}
         >
-          <div className="flex gap-8 items-center">
+          <div
+            className={`flex gap-8 items-center ${
+              isHome ? "text-white" : "text-black"
+            }`}
+          >
             <a href="#" className="hover:underline">
               About
             </a>
@@ -32,13 +39,21 @@ const NavBar = () => {
             </a>
           </div>
 
-          <div className="flex justify-center">
+          <div
+            className={`flex justify-center ${
+              isHome ? "text-white" : "text-black"
+            }`}
+          >
             <a href="/" className="text-xl font-bold">
               Future Interio
             </a>
           </div>
 
-          <div className="flex justify-end">
+          <div
+            className={`flex justify-end ${
+              isHome ? "text-white" : "text-black"
+            }`}
+          >
             <a href="#" className="hover:underline">
               Contact Us
             </a>
@@ -46,7 +61,11 @@ const NavBar = () => {
         </div>
 
         {/* Mobile Nav Toggle */}
-        <div className="md:hidden flex justify-between items-center">
+        <div
+          className={`md:hidden flex justify-between items-center ${
+            isHome ? "text-white" : "text-black"
+          }`}
+        >
           <a href="/" className="text-xl font-bold">
             Future Interio
           </a>
@@ -57,7 +76,11 @@ const NavBar = () => {
 
         {/* Mobile Nav Menu */}
         {isOpen && (
-          <div className="md:hidden flex flex-col gap-6 mt-6 text-lg uppercase">
+          <div
+            className={`md:hidden flex flex-col gap-6 mt-6 text-lg uppercase ${
+              isHome ? "text-white" : "text-black"
+            }`}
+          >
             <a href="#" className="hover:underline">
               About
             </a>

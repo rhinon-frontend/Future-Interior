@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import {
   Carousel,
@@ -9,26 +11,41 @@ import {
 import { Card, CardContent } from "../ui/card";
 import { designGallery } from "@/utils";
 import Image from "next/image";
+import { motion } from "framer-motion"; // Import Framer Motion
+
+// Define animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
 
 const DesignGallery = () => {
   return (
     <section className="w-full max-w-7xl mx-auto px-4 py-14 flex flex-col gap-16">
-      {/* Section Header */}
-      <div className="space-y-4 text-center">
+      {/* Section Header with Animation */}
+      <motion.div
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="space-y-4 text-center"
+      >
         <h2 className="text-4xl font-bold uppercase text-black">
           Design Gallery
         </h2>
         <div className="w-32 h-1 bg-gradient-to-r from-black to-transparent mx-auto rounded-full" />
         <p className="text-lg text-gray-800 max-w-xl mx-auto">
           Explore our stunning design gallery showcasing a variety of styles,
-          colors, and finishes. From modern to traditional, find inspiration
-          for your next project.
+          colors, and finishes. From modern to traditional, find inspiration for
+          your next project.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Carousel */}
+      {/* Carousel with no animation on carousel section */}
       <Carousel className="w-full">
-        <CarouselContent className="-ml-4"> {/* Negative margin to offset padding */}
+        <CarouselContent className="-ml-4">
+          {" "}
+          {/* Negative margin to offset padding */}
           {designGallery.map((item) => (
             <CarouselItem
               key={item.id}

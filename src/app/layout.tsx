@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} antialiased bg[#f5f3ef]`}>
+      <body className={`${poppins.className} antialiased bg[#f5f3ef] scroll-smooth`}>
         <NavBar />
         <Toaster />
         {children}

@@ -1,10 +1,11 @@
 import { color } from "motion/react";
 
 export const webpImages = {
-  heroImage: "/hero-section.webp",
+  heroImage: "/hero.webp",
   trendingOne: "/Trending1.webp",
   trendingTwo: "/Trending2.webp",
   trendingThree: "/Trending3.webp",
+  sketch: "/sketch.webp",
 };
 
 export const WhyChooseSvg = {

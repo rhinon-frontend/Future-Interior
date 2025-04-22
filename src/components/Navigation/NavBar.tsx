@@ -9,90 +9,79 @@ const NavBar = () => {
   const pathname = usePathname();
   const isHome = pathname === "/";
 
+  const navLinks = [
+    { label: "About", href: "#about" },
+    { label: "Work", href: "#work" },
+    { label: "Services", href: "#services" },
+  ];
+
   return (
     <nav
-      className={`relative z-[1000] py-6 transition-colors duration-300 ${
-        isOpen ? "bg-[#49543e]" : isHome ? "bg-transparent" : "bg-red-500"
+      className={`fixed top-7 left-7 right-7 mx-auto flex flex-col uppercase justify-center items-center max-w-7xl shadow-[0_10px_70px_rgba(32,32,29,0.12)] z-50 transition-colors duration-300 ${
+        isOpen || !isHome ? "bg-white" : "bg-[#f6f1eb]"
       }`}
     >
-      <div className="w-full max-w-7xl mx-auto px-5">
+      <div className="w-full px-5 py-4">
         {/* Desktop Nav */}
-        <div
-          className="hidden md:grid items-center"
-          style={{
-            gridTemplateColumns: "1fr 0.7fr 1fr",
-          }}
-        >
-          <div
-            className={`flex gap-8 items-center ${
-              isHome ? "text-white" : "text-black"
-            }`}
-          >
-            <a href="#" className="hover:underline">
-              About
-            </a>
-            <a href="#" className="hover:underline">
-              Work
-            </a>
-            <a href="#" className="hover:underline">
-              Services
-            </a>
+        <div className="hidden md:flex items-center justify-between w-full">
+          {/* Left: Logo */}
+          <a href="/" className="text-2xl  text-black">
+            Future Interior
+          </a>
+
+          {/* Center: Nav Links */}
+          <div className="flex gap-10 text-base font-medium text-gray-800">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="hover:text-primary transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
 
-          <div
-            className={`flex justify-center ${
-              isHome ? "text-white" : "text-black"
-            }`}
+          {/* Right: Contact */}
+          <a
+            href="#contact"
+            className="text-lg font-medium text-white rounded hover:bg-[#a35f42] transition-colors px-6 py-2"
+            style={{
+              backgroundColor: "#b47250",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+            }}
           >
-            <a href="/" className="text-xl font-bold">
-              Future Interio
-            </a>
-          </div>
-
-          <div
-            className={`flex justify-end ${
-              isHome ? "text-white" : "text-black"
-            }`}
-          >
-            <a href="#" className="hover:underline">
-              Contact Us
-            </a>
-          </div>
+            Contact
+          </a>
         </div>
 
-        {/* Mobile Nav Toggle */}
-        <div
-          className={`md:hidden flex justify-between items-center ${
-            isHome ? "text-white" : "text-black"
-          }`}
-        >
+        {/* Mobile Nav */}
+        <div className="flex items-center justify-between md:hidden text-black">
           <a href="/" className="text-xl font-bold">
-            Future Interio
+            Future Interior
           </a>
+
           <button onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
-        {/* Mobile Nav Menu */}
+        {/* Mobile Dropdown */}
         {isOpen && (
-          <div
-            className={`md:hidden flex flex-col gap-6 mt-6 text-lg uppercase ${
-              isHome ? "text-white" : "text-black"
-            }`}
-          >
-            <a href="#" className="hover:underline">
-              About
-            </a>
-            <a href="#" className="hover:underline">
-              Work
-            </a>
-            <a href="#" className="hover:underline">
-              Services
-            </a>
-            <a href="#" className="hover:underline">
-              Contact Us
-            </a>
+          <div className="flex flex-col gap-6 mt-4 text-sm font-medium uppercase text-black bg-white/80 backdrop-blur-md p-4 rounded-lg shadow-md md:hidden">
+            {[...navLinks, { label: "Contact", href: "#contact" }].map(
+              (link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
           </div>
         )}
       </div>

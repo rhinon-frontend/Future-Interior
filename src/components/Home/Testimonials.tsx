@@ -20,7 +20,7 @@ const fadeInUp = {
 
 const Testimonials = () => {
   return (
-    <section className="w-full bg-[#49543e] py-24">
+    <section className="w-full bg-[#eee5dc] py-24">
       <motion.div
         variants={fadeInUp}
         initial="hidden"
@@ -29,10 +29,10 @@ const Testimonials = () => {
       className="space-y-4 text-center mx-auto px-4 flex flex-col items-center gap-10 text-white">
         {/* Section Header */}
         <div className="space-y-4 text-center">
-          <h2 className="text-4xl font-bold uppercase text-white">
+          <h2 className="text-4xl font-bold uppercase text-black">
             Loved by 100+ Homeowners
           </h2>
-          <div className="w-32 h-1 bg-gradient-to-r from-white to-transparent mx-auto rounded-full" />
+          <div className="w-32 h-1 bg-gradient-to-r from-black to-transparent mx-auto rounded-full" />
           <p className="text-lg text-gray-200 max-w-xl mx-auto">
             What our clients say about us
           </p>
@@ -47,7 +47,7 @@ const Testimonials = () => {
                   <div className="p-1 h-full">
                     <Card className="h-full">
                       <CardContent className="p-8 space-y-4 h-full flex flex-col justify-between text-gray-800 bg-white rounded-lg shadow-lg">
-                        <p className="text-lg leading-[31px]">
+                        <p className="text-lg leading-[31px] text-left mx-auto">
                           &ldquo;{item.quote}&rdquo;
                         </p>
                         <div className="flex items-center gap-4 mt-4">

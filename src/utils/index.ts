@@ -1,4 +1,12 @@
 import exp from "constants";
+import {
+  BadgeCheck,
+  Hammer,
+  ShieldCheck,
+  Star,
+  Truck,
+  Wallet,
+} from "lucide-react";
 import { image, img } from "motion/react-client";
 import { title } from "process";
 
@@ -7,7 +15,7 @@ export const HeaderData = {
   subtitle: `We turn your empty house to a lovely home, making the compact spaces
           with space-saving furniture. Turning the unique tastes of yours into
           reality!`,
-  buttonText: "GET INSTANT ESTIMATE",
+  buttonText: "GET FREE ESTIMATE",
   altText: "hero",
 };
 
@@ -17,6 +25,15 @@ export const NavBarData = [
   { name: "Services", link: "/services" },
   { name: "Future Interior", link: "/" },
   { name: "Contact Us", link: "/contact" },
+];
+
+export const designOptions = [
+  "Modular Kitchen",
+  "Wardrobe",
+  "False Ceiling",
+  "TV Unit",
+  "Lighting",
+  "Wall Paint",
 ];
 
 // export const TrendingData = [
@@ -346,3 +363,39 @@ export const items = [
     label: "Wall Decor",
   },
 ] as const;
+
+export const WhyChooseDatas = [
+  {
+    id: 1,
+    icon: ShieldCheck,
+    title: "Trusted & Secure",
+  },
+  {
+    id: 2,
+    icon: Hammer,
+    title: "Expert Craftsmanship",
+  },
+  {
+    id: 3,
+    icon: Star,
+    title: "Top Rated Quality",
+  },
+  {
+    id: 4,
+    icon: Truck,
+    title: "Fast Delivery",
+  },
+  {
+    id: 5,
+    icon: BadgeCheck,
+    title: "Certified Designs",
+  },
+  {
+    id: 6,
+    icon: Wallet,
+    title: "Affordable Pricing",
+  },
+];
+
+
+export const stepper = ["Property", "Contact", "Preferences", "Sign Up"];

@@ -16,7 +16,7 @@ const fadeUp = {
 
 const Process = () => {
   return (
-    <section className="flex flex-col items-center justify-center gap-20 w-screen bg-[#49543e] mx-auto px-4 py-20">
+    <section className="flex flex-col items-center justify-center gap-20 w-screen bg-[#f6f1eb] mx-auto px-4 py-20">
       {/* Header Animation */}
       <motion.div
         className="text-center"
@@ -25,8 +25,8 @@ const Process = () => {
         whileInView="visible"
         viewport={{ once: true }}
       >
-        <h1 className="text-4xl font-bold uppercase text-white">Process</h1>
-        <div className="w-32 h-1 bg-gradient-to-r from-white to-transparent mx-auto rounded-full mt-3" />
+        <h1 className="text-4xl font-bold uppercase text-black">Process</h1>
+        <div className="w-32 h-1 bg-gradient-to-r from-black to-transparent mx-auto rounded-full mt-3" />
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl w-full px-4">
@@ -38,7 +38,7 @@ const Process = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <h1 className="text-5xl tracking-tight text-white">
+          <h1 className="text-5xl tracking-tight text-black leading-tight">
             Our Working Process
           </h1>
         </motion.div>
@@ -47,7 +47,7 @@ const Process = () => {
         {steps.map((step, index) => (
           <motion.div
             key={index}
-            className="flex flex-col items-start justify-start gap-4 p-6 text-white"
+            className="flex flex-col items-start justify-start gap-4 p-6 text-black"
             custom={index}
             variants={fadeUp}
             initial="hidden"
@@ -55,8 +55,8 @@ const Process = () => {
             viewport={{ once: true }}
           >
             <span className="text-xl font-medium">{step.id}</span>
-            <h3 className="text-2xl font-medium text-[#fff]">{step.title}</h3>
-            <p className="text-[#fff9] text-base leading-[27px]">{step.description}</p>
+            <h3 className="text-2xl font-medium text-black">{step.title}</h3>
+            <p className="text-[#ae7256] text-base leading-[27px]">{step.description}</p>
           </motion.div>
         ))}
       </div>

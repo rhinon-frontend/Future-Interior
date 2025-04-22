@@ -75,8 +75,7 @@ const FreeEstimate = () => {
           </p>
 
           <Button
-            variant="default"
-            className="mt-4 self-center lg:self-start px-6 py-6"
+            className="mt-4 self-center lg:self-start px-6 py-6 bg-[#b47250]"
             onClick={() => router.push("/request-quote")}
           >
             {FreeEstimateData.buttonText}
@@ -84,10 +83,7 @@ const FreeEstimate = () => {
         </motion.div>
 
         {/* Image */}
-        <motion.div
-          variants={fadeInUp}
-          className="flex-1 w-full max-w-lg"
-        >
+        <motion.div variants={fadeInUp} className="flex-1 w-full max-w-lg">
           <Image
             src={FreeEstimateData.image}
             width={400}
@@ -113,10 +109,7 @@ const FreeEstimate = () => {
         }}
       >
         {/* Image */}
-        <motion.div
-          variants={fadeInUp}
-          className="flex-1 w-full max-w-lg"
-        >
+        <motion.div variants={fadeInUp} className="flex-1 w-full max-w-lg">
           <Image
             src={FreeEstimateData2.image2}
             width={400}
@@ -147,8 +140,7 @@ const FreeEstimate = () => {
           </p>
 
           <Button
-            variant="default"
-            className="mt-4 self-center lg:self-start px-6 py-6"
+            className="mt-4 self-center lg:self-start px-6 py-6 bg-[#b47250]"
             onClick={() => router.push("/request-quote")}
           >
             {FreeEstimateData2.buttonText2}

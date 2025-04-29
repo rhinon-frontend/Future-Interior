@@ -5,6 +5,8 @@
 
 # dependencies
 
+.env
+
 
 /node_modules
 /.pnp
@@ -14,7 +16,7 @@
 # build output
 .next/
 
-# testing
+.next
 /coverage
 
 # next.js

@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 // Animation variants
 const fadeUp = {
@@ -13,32 +14,32 @@ const fadeUp = {
   }),
 };
 
-const BrandPartners = () => {
-  const logos = [
-    {
-      alt: "Transistor",
-      src: "https://tailwindcss.com/plus-assets/img/logos/158x48/transistor-logo-gray-900.svg",
-    },
-    {
-      alt: "Reform",
-      src: "https://tailwindcss.com/plus-assets/img/logos/158x48/reform-logo-gray-900.svg",
-    },
-    {
-      alt: "Tuple",
-      src: "https://tailwindcss.com/plus-assets/img/logos/158x48/tuple-logo-gray-900.svg",
-    },
-    {
-      alt: "SavvyCal",
-      src: "https://tailwindcss.com/plus-assets/img/logos/158x48/savvycal-logo-gray-900.svg",
-    },
-    {
-      alt: "Statamic",
-      src: "https://tailwindcss.com/plus-assets/img/logos/158x48/statamic-logo-gray-900.svg",
-    },
-  ];
+const logos = [
+  {
+    alt: "Transistor",
+    src: "https://tailwindcss.com/plus-assets/img/logos/158x48/transistor-logo-gray-900.svg",
+  },
+  {
+    alt: "Reform",
+    src: "https://tailwindcss.com/plus-assets/img/logos/158x48/reform-logo-gray-900.svg",
+  },
+  {
+    alt: "Tuple",
+    src: "https://tailwindcss.com/plus-assets/img/logos/158x48/tuple-logo-gray-900.svg",
+  },
+  {
+    alt: "SavvyCal",
+    src: "https://tailwindcss.com/plus-assets/img/logos/158x48/savvycal-logo-gray-900.svg",
+  },
+  {
+    alt: "Statamic",
+    src: "https://tailwindcss.com/plus-assets/img/logos/158x48/statamic-logo-gray-900.svg",
+  },
+];
 
+const BrandPartners = () => {
   return (
-    <div className="py-20">
+    <section className="py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-0">
         {/* Header with animation */}
         <motion.div
@@ -46,7 +47,7 @@ const BrandPartners = () => {
           variants={fadeUp}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
         >
           <h2 className="text-3xl sm:text-4xl font-bold uppercase text-zinc-800">
             Channel Partners
@@ -60,26 +61,30 @@ const BrandPartners = () => {
         {/* Logos Grid with staggered animation */}
         <div className="mx-auto mt-12 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-20 lg:mx-0 lg:max-w-none lg:grid-cols-5">
           {logos.map((logo, index) => (
-            <motion.img
+            <motion.div
               key={logo.alt}
               custom={index}
               variants={fadeUp}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true }}
-              alt={logo.alt}
-              src={logo.src}
-              width={158}
-              height={48}
-              className={`col-span-2 max-h-12 w-full object-contain ${
-                index === 3 ? "sm:col-start-2" : ""
-              } ${index === 4 ? "col-start-2 sm:col-start-auto" : ""} lg:col-span-1`}
-            />
+              viewport={{ once: true, amount: 0.2 }}
+              className={`col-span-2 max-h-12 w-full ${index === 3 ? "sm:col-start-2" : ""} ${index === 4 ? "col-start-2 sm:col-start-auto" : ""} lg:col-span-1`}
+            >
+              <Image
+                alt={logo.alt}
+                src={logo.src}
+                width={158}
+                height={48}
+                className="object-contain"
+                loading="lazy"
+                sizes="(min-width: 1024px) 158px, 25vw"
+              />
+            </motion.div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default BrandPartners;
+export default memo(BrandPartners);

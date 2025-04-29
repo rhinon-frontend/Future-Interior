@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 type CustomStepperProps = {
   steps: string[];
@@ -14,35 +14,32 @@ const CustomStepper = ({ steps, currentStep }: CustomStepperProps) => {
           const isCompleted = stepNumber < currentStep;
           const isActive = stepNumber === currentStep;
 
+          // Efficiently handling className logic
+          const stepCircleClass = `w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${
+            isCompleted
+              ? "bg-[#1E1FBF] text-white" // Completed steps will be logo color
+              : isActive
+              ? "bg-[#1E1FBF] text-white" // Active step will be logo color
+              : "bg-gray-300 text-gray-500"
+          }`;
+
+          const stepTextClass = `mt-2 text-xs ${
+            isCompleted ? "text-[#1E1FBF]" : "text-gray-600"
+          }`;
+
+          const stepLineClass = `flex-1 h-1 mx-2 transition-colors duration-300 ${
+            isCompleted ? "bg-[#1E1FBF]" : "bg-gray-200"
+          }`;
+
           return (
             <React.Fragment key={index}>
               <div className="flex flex-col items-center text-center w-24">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${
-                    isCompleted
-                      ? "bg-[#b47250] text-white"
-                      : isActive
-                      ? "bg-[#b47250] text-white"
-                      : "bg-gray-300 text-gray-500"
-                  }`}
-                >
-                  {stepNumber}
-                </div>
-                <span
-                  className={`mt-2 text-xs ${
-                    isCompleted ? "text-[#b47250]" : "text-gray-600"
-                  }`}
-                >
-                  {step}
-                </span>
+                <div className={stepCircleClass}>{stepNumber}</div>
+                <span className={stepTextClass}>{step}</span>
               </div>
 
               {index !== steps.length - 1 && (
-                <div
-                  className={`flex-1 h-1 mx-2 transition-colors duration-300 ${
-                    isCompleted ? "bg-[#b47250]" : "bg-gray-200"
-                  }`}
-                />
+                <div className={stepLineClass} />
               )}
             </React.Fragment>
           );
@@ -52,4 +49,5 @@ const CustomStepper = ({ steps, currentStep }: CustomStepperProps) => {
   );
 };
 
-export default CustomStepper;
+// Memoizing the component to prevent unnecessary re-renders
+export default memo(CustomStepper);

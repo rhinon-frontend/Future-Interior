@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
+import { motion } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
@@ -8,65 +9,85 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { faqs } from "@/utils";
-import { motion } from "framer-motion";
 
 // Animation variants
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.2, // stagger children slightly
+    },
+  },
+};
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
+  hidden: { opacity: 0, y: 20 },
+  visible: (custom: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.15,
+      delay: custom * 0.15,
       duration: 0.5,
       ease: "easeOut",
     },
   }),
 };
 
+// Memoized FAQ Item
+const FAQItem = memo(({ faq, index }: { faq: (typeof faqs)[number]; index: number }) => (
+  <motion.div
+    variants={fadeUp}
+    custom={index}
+    className="overflow-hidden"
+  >
+    <AccordionItem value={`item-${index}`}>
+      <AccordionTrigger className="text-lg">
+        {faq.question}
+      </AccordionTrigger>
+      <AccordionContent>
+        {faq.answer}
+      </AccordionContent>
+    </AccordionItem>
+  </motion.div>
+));
+FAQItem.displayName = "FAQItem";
+
 const FrequentlyAsk = () => {
   return (
-    <motion.div
-      className="w-full max-w-7xl mx-auto px-4 py-20 flex flex-col gap-12"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={{
-        hidden: {},
-        visible: {},
-      }}
-    >
-      {/* Title Animation */}
-      <motion.h1
-        className="text-center text-4xl tracking-tight"
-        variants={fadeUp}
-        custom={0}
+    <section className="w-full max-w-7xl mx-auto px-4 py-20 flex flex-col gap-12">
+      {/* Title */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={containerVariants}
+        className="text-center"
       >
-        Frequently Asked Questions
-      </motion.h1>
+        <motion.h1
+          className="text-4xl font-bold tracking-tight"
+          variants={fadeUp}
+          custom={0}
+        >
+          Frequently Asked Questions
+        </motion.h1>
+      </motion.div>
 
-      {/* Accordion with animated items */}
+      {/* Accordion with Animated FAQ Items */}
       <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
-        {faqs.map((faq, index) => (
-          <motion.div
-            key={index}
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={index + 1}
-          >
-            <AccordionItem value={`item-${index}`}>
-              <AccordionTrigger className="text-lg">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent>{faq.answer}</AccordionContent>
-            </AccordionItem>
-          </motion.div>
-        ))}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={containerVariants}
+          className="flex flex-col gap-4"
+        >
+          {faqs.map((faq, index) => (
+            <FAQItem key={index} faq={faq} index={index + 1} />
+          ))}
+        </motion.div>
       </Accordion>
-    </motion.div>
+    </section>
   );
 };
 
-export default FrequentlyAsk;
+export default memo(FrequentlyAsk);

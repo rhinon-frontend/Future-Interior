@@ -6,6 +6,8 @@ export const webpImages = {
   trendingTwo: "/Trending2.webp",
   trendingThree: "/Trending3.webp",
   sketch: "/sketch.webp",
+  leavingroom : "/leavingroom.webp",
+  blue:"/blue.webp"
 };
 
 export const WhyChooseSvg = {

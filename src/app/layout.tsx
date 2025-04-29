@@ -4,6 +4,11 @@ import "./globals.css";
 import NavBar from "@/components/Navigation/NavBar";
 import Footer from "@/components/Home/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import { LoadingProvider } from "@/context/LoadingProvider";
+import { ClerkProvider, RedirectToSignIn, useUser } from "@clerk/nextjs";
+
+// Replace with your Clerk frontend API key
+const clerkPublishableKey = "your-clerk-publishable-key";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -11,7 +16,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Future Interior",
+  title: "Future Interio",
   description: "Designing Spaces for Tomorrow",
   icons: {
     icon: "/favicon.ico",
@@ -24,13 +29,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${poppins.className} antialiased bg[#f6f1eb] scroll-smooth p-[14px]`}>
-        <NavBar />
-        <Toaster />
-        {children}
-        <Footer />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${poppins.className} antialiased bg-[#FAFAFA] scroll-smooth p-[10px]`}
+        >
+          <LoadingProvider>
+            <NavBar />
+            <Toaster />
+            {children}
+            <Footer />
+          </LoadingProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

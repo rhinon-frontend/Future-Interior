@@ -1,151 +1,187 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { string, z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FaGoogle } from "react-icons/fa";
+import { useToast } from "@/hooks/use-toast";
+import { useEstimate } from "@/context/EstimateContext";
+import { supabase } from "@/lib/superbase";
 
-type StepFourProps = {
-  nextStep: () => void;
-  prevStep: () => void;
-  updateData: (data: any) => void;
-  data: { email: string | null; password: string | null };
-};
-
+// Validation schema
 const formSchema = z.object({
-  email: z.string().email({ message: "Enter a valid email address" }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
+  full_name: z.string().nonempty({ message: "Full Name is required." }),
+  email: z
+    .string()
+    .nonempty({ message: "Email is required" })
+    .email("Invalid email"),
+  phone_number: z
+    .string()
+    .regex(/^\d{10}$/, { message: "Phone number must be exactly 10 digits." }),
 });
 
-export function StepFour({
-  data,
-  nextStep,
-  prevStep,
-  updateData,
-}: StepFourProps) {
+// Error Message component
+const ErrorMessage = ({ message }: { message: string }) => (
+  <p className="text-sm text-red-500 mt-1">{message}</p>
+);
+
+// Email sending
+async function sendEstimateEmail(finalData: any) {
+  const response = await fetch("/api/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(finalData),
+  });
+
+  if (!response.ok) throw new Error("Failed to send email");
+
+  const result = await response.json();
+  if (!result.success) throw new Error("Email sending failed");
+}
+
+export function StepFour({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const { formData, updateEstimate, resetEstimate } = useEstimate();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      full_name: formData.full_name || "",
+      email: formData.email || "",
+      phone_number: formData.phone_number || "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Form submitted:", values);
-    form.reset({
-      email: "",
-      password: "",
-    });
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+    try {
+      let floorPlanUrl = "";
+
+      if (formData.floor_plan_url instanceof File) {
+        const file = formData.floor_plan_url;
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("floorplans")
+          .upload(`floorplans/${Date.now()}_${file.name}`, file);
+
+        if (uploadError) throw new Error("Upload failed: " + uploadError.message);
+
+        const { data: urlData } = supabase.storage
+          .from("floorplans")
+          .getPublicUrl(uploadData.path);
+
+        floorPlanUrl = urlData.publicUrl;
+      } else if (typeof formData.floor_plan_url === "string") {
+        floorPlanUrl = formData.floor_plan_url;
+      }
+
+      const finalData = {
+        ...formData,
+        ...values,
+        floor_plan_url: floorPlanUrl,
+      };
+
+      const { data, error } = await supabase.from("estimates").insert([finalData]);
+
+      if (error) throw error;
+
+      await sendEstimateEmail(finalData);
+
+      toast({
+        title: "Estimate Submitted",
+        description: "Your estimate request has been received!",
+      });
+
+      updateEstimate(finalData);
+      form.reset();
+      resetEstimate();
+      onNext();
+    } catch (error) {
+      console.error("Form submit error:", error);
+      toast({
+        title: "Unexpected Error",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full max-w-md mx-auto bg-white p-8 rounded-xl shadow-md space-y-6"
-      >
-        <h2 className="text-2xl font-semibold text-center text-zinc-800">
-          Create your account
-        </h2>
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="w-full max-w-md mx-auto bg-white p-8 rounded-xl space-y-6 text-[#1E1FBF]"
+    >
+      <h2 className="text-2xl font-semibold text-center text-[#1E1FBF]">
+        Enter Your Contact Details
+      </h2>
+
+      <div className="space-y-4">
+        {/* Full Name */}
+        <div>
+          <label className="text-sm font-medium text-[#1E1FBF]">Full Name</label>
+          <Input
+            placeholder="Your Full Name"
+            {...form.register("full_name")}
+            className="rounded-md border-[#d0d0ff] focus:border-[#1E1FBF] focus:ring-1 focus:ring-[#1E1FBF]"
+          />
+          {form.formState.errors.full_name && (
+            <ErrorMessage message={form.formState.errors.full_name.message || ""} />
+          )}
+        </div>
 
         {/* Email */}
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm font-medium text-zinc-700">
-                Email Address
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="you@example.com"
-                  {...field}
-                  className="rounded-md border-zinc-300 focus:border-blue-500 focus:ring-blue-500"
-                />
-              </FormControl>
-              <FormMessage className="text-sm text-red-500" />
-            </FormItem>
+        <div>
+          <label className="text-sm font-medium text-[#1E1FBF]">Email Address</label>
+          <Input
+            placeholder="you@example.com"
+            {...form.register("email")}
+            className="rounded-md border-[#d0d0ff] focus:border-[#1E1FBF] focus:ring-1 focus:ring-[#1E1FBF]"
+          />
+          {form.formState.errors.email && (
+            <ErrorMessage message={form.formState.errors.email.message || ""} />
           )}
-        />
-
-        {/* Password */}
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm font-medium text-zinc-700">
-                Password
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Enter your password"
-                  {...field}
-                  className="rounded-md border-zinc-300 focus:border-blue-500 focus:ring-blue-500"
-                />
-              </FormControl>
-              <FormMessage className="text-sm text-red-500" />
-            </FormItem>
-          )}
-        />
-
-        {/* Submit */}
-        <Button
-          type="submit"
-          className="w-full text-white bg-blue-600 hover:bg-blue-700"
-        >
-          Create Account
-        </Button>
-
-        {/* Divider */}
-        <div className="relative text-center">
-          <span className="text-sm text-zinc-500 bg-white px-2 relative z-10">
-            or
-          </span>
-          <div className="absolute inset-0 border-t border-zinc-300 top-1/2 -translate-y-1/2"></div>
         </div>
 
-        {/* Google Button */}
-        <Button variant="default" className="w-full">
-          Continue with Google <FaGoogle className="ml-2" />
-        </Button>
-
-        {/* Footer text */}
-        <div className="text-center text-sm text-zinc-500 mt-4 space-y-2">
-          <p>
-            By signing up, you agree to our{" "}
-            <a href="#" className="text-blue-500 hover:underline">
-              Terms of Service
-            </a>{" "}
-            and{" "}
-            <a href="#" className="text-blue-500 hover:underline">
-              Privacy Policy
-            </a>
-          </p>
-          <p>
-            Already have an account?{" "}
-            <button type="button" className="text-blue-500 hover:underline">
-              Sign in
-            </button>
-          </p>
+        {/* Phone Number */}
+        <div>
+          <label className="text-sm font-medium text-[#1E1FBF]">Phone Number</label>
+          <Input
+            type="tel"
+            placeholder="Enter your phone number"
+            {...form.register("phone_number")}
+            className="rounded-md border-[#d0d0ff] focus:border-[#1E1FBF] focus:ring-1 focus:ring-[#1E1FBF]"
+          />
+          {form.formState.errors.phone_number && (
+            <ErrorMessage message={form.formState.errors.phone_number.message || ""} />
+          )}
         </div>
-      </form>
-    </Form>
+
+        {/* Buttons */}
+        <div className="flex gap-4 mt-6">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onBack}
+            className="border-[#1E1FBF] text-[#1E1FBF] hover:bg-[#f0f3ff]"
+          >
+            Back
+          </Button>
+          <Button
+            type="submit"
+            className="w-full bg-[#1E1FBF] hover:bg-[#1d1db3] text-white"
+            disabled={loading}
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </Button>
+        </div>
+      </div>
+    </form>
   );
 }

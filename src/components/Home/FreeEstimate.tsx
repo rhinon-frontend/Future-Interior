@@ -1,31 +1,28 @@
 "use client";
 
 import { FreeEstimateData, FreeEstimateData2 } from "@/utils";
-import Image from "next/image";
-import React from "react";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
+import EstimateSection from "./EstimateSection";
 
-// Animation variants
+// Motion Variants
 const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (delay: number = 0) => ({
+  hidden: { opacity: 0, y: 30 },
+  visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      delay,
-      duration: 0.8,
-      ease: "easeOut",
-    },
-  }),
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
 };
 
-const FreeEstimate = () => {
-  const router = useRouter();
+// Lazy Load Second Estimate Section
+const LazyEstimateSection = dynamic(() => Promise.resolve(EstimateSection), {
+  ssr: false,
+});
 
+const FreeEstimate = () => {
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 py-10 md:py-20 flex flex-col gap-24">
+    <section className="w-full max-w-7xl mx-auto px-4 py-16 md:py-24 flex flex-col gap-24">
       {/* Section Heading */}
       <motion.div
         variants={fadeInUp}
@@ -34,119 +31,36 @@ const FreeEstimate = () => {
         viewport={{ once: true }}
         className="flex flex-col items-center gap-4"
       >
-        <h2 className="text-4xl font-semibold text-zinc-800 text-center uppercase">
+        <h2 className="text-4xl font-bold text-[#0D1A3C] text-center uppercase tracking-wide">
           Free Estimate
         </h2>
-        <div className="w-32 h-1 bg-gradient-to-r from-zinc-600 to-transparent rounded-full" />
-      </motion.div>
-
-      {/* Section 1 */}
-      <motion.div
-        className="flex flex-col-reverse lg:flex-row items-center justify-between gap-12"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={{
-          visible: {
-            transition: {
-              staggerChildren: 0.2,
-            },
-          },
-        }}
-      >
-        {/* Text Content */}
         <motion.div
-          variants={fadeInUp}
-          className="flex-1 flex flex-col gap-6 text-center lg:text-left"
-        >
-          <div className="flex gap-3 items-center justify-center lg:justify-start text-zinc-600">
-            <div className="h-0.5 w-6 bg-zinc-500" />
-            <h3 className="tex-base md:text-lg uppercase">
-              {FreeEstimateData.heading}
-            </h3>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl lg:text-[56px] lg:leading-[66px] font-bold text-zinc-900 leading-tight">
-            {FreeEstimateData.title}
-          </h1>
-
-          <p className="text-zinc-600 text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
-            {FreeEstimateData.subtitle}
-          </p>
-
-          <Button
-            className="mt-4 self-center lg:self-start px-6 py-6 bg-[#b47250]"
-            onClick={() => router.push("/request-quote")}
-          >
-            {FreeEstimateData.buttonText}
-          </Button>
-        </motion.div>
-
-        {/* Image */}
-        <motion.div variants={fadeInUp} className="flex-1 w-full max-w-lg">
-          <Image
-            src={FreeEstimateData.image}
-            width={400}
-            height={450}
-            alt="Estimate Image"
-            className="w-full h-auto object-cover shadow-xl"
-          />
-        </motion.div>
+          initial={{ width: 0 }}
+          whileInView={{ width: "8rem" }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+          className="h-1 bg-gradient-to-r from-[#1E1FBF] via-[#7286D3] to-transparent rounded-full"
+        />
       </motion.div>
 
-      {/* Section 2 */}
-      <motion.div
-        className="flex flex-col lg:flex-row items-center justify-between gap-16"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={{
-          visible: {
-            transition: {
-              staggerChildren: 0.2,
-            },
-          },
-        }}
-      >
-        {/* Image */}
-        <motion.div variants={fadeInUp} className="flex-1 w-full max-w-lg">
-          <Image
-            src={FreeEstimateData2.image2}
-            width={400}
-            height={450}
-            alt="Estimate Image"
-            className="w-full h-auto object-cover shadow-xl"
-          />
-        </motion.div>
+      {/* First Estimate Section (Important for LCP) */}
+      <EstimateSection
+        heading={FreeEstimateData.heading}
+        title={FreeEstimateData.title}
+        subtitle={FreeEstimateData.subtitle}
+        buttonText={FreeEstimateData.buttonText}
+        image={FreeEstimateData.image}
+        priority={true}
+      />
 
-        {/* Text Content */}
-        <motion.div
-          variants={fadeInUp}
-          className="flex-1 flex flex-col gap-6 text-center lg:text-left"
-        >
-          <div className="flex gap-3 items-center justify-center lg:justify-start text-zinc-600">
-            <div className="h-0.5 w-6 bg-zinc-500" />
-            <h3 className="text-base md:text-lg uppercase">
-              {FreeEstimateData2.heading2}
-            </h3>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl lg:text-[56px] lg:leading-[66px] font-bold text-zinc-900 leading-tight">
-            {FreeEstimateData2.title2}
-          </h1>
-
-          <p className="text-zinc-600 text-lg leading-relaxed mx-auto lg:mx-0 max-w-xl">
-            {FreeEstimateData2.subtitle2}
-          </p>
-
-          <Button
-            className="mt-4 self-center lg:self-start px-6 py-6 bg-[#b47250]"
-            onClick={() => router.push("/request-quote")}
-          >
-            {FreeEstimateData2.buttonText2}
-          </Button>
-        </motion.div>
-      </motion.div>
+      {/* Second Estimate Section (Lazy loaded) */}
+      <LazyEstimateSection
+        heading={FreeEstimateData2.heading2}
+        title={FreeEstimateData2.title2}
+        subtitle={FreeEstimateData2.subtitle2}
+        buttonText={FreeEstimateData2.buttonText2}
+        image={FreeEstimateData2.image2}
+        reverse
+      />
     </section>
   );
 };

@@ -398,4 +398,4 @@ export const WhyChooseDatas = [
 ];
 
 
-export const stepper = ["Property", "Contact", "Preferences", "Sign Up"];
+export const stepper = ["Property", "Floor Plan Upload", "Preferences", "Contact"];

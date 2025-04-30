@@ -12,6 +12,9 @@ import LoadingSpinner from "@/components/spinner/LoadingSpinner";
 import { useLoading } from "@/context/LoadingProvider";
 import React from "react";
 
+
+
+
 export default function HomePage() {
   const { isLoading } = useLoading(); // Get the loading state from context
 

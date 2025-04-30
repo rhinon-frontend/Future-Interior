@@ -3,7 +3,7 @@ import { Resend } from "resend";
 
 export async function POST(req: Request) {
   if (!process.env.NEXT_RESEND_API_KEY) {
-    console.error("❌ NEXT_RESEND_API_KEY is missing");
+    console.error("NEXT_RESEND_API_KEY is missing");
     return Response.json({ error: "Missing API key" }, { status: 500 });
   }
 

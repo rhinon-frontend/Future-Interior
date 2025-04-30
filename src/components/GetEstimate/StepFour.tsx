@@ -31,9 +31,6 @@ const ErrorMessage = ({ message }: { message: string }) => (
 async function sendEstimateEmail(finalData: any) {
   const response = await fetch("/api/send", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(finalData),
   });
 
@@ -43,7 +40,13 @@ async function sendEstimateEmail(finalData: any) {
   if (!result.success) throw new Error("Email sending failed");
 }
 
-export function StepFour({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+export function StepFour({
+  onNext,
+  onBack,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+}) {
   const { formData, updateEstimate, resetEstimate } = useEstimate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -60,6 +63,57 @@ export function StepFour({ onNext, onBack }: { onNext: () => void; onBack: () =>
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
     try {
+      // 1. Check for duplicate email
+      const { data: existingEmail, error: emailCheckError } = await supabase
+        .from("estimates")
+        .select("email")
+        .eq("email", values.email)
+        .maybeSingle();
+
+      if (emailCheckError) throw emailCheckError;
+
+      if (existingEmail) {
+        form.setError("email", {
+          type: "manual",
+          message: "This email has already been used for an estimate.",
+        });
+
+        toast({
+          title: "Duplicate Email",
+          description: "This email is already registered. Please use another.",
+          variant: "destructive",
+        });
+
+        setLoading(false);
+        return;
+      }
+
+      // 2. Check for duplicate phone number
+      const { data: existingPhone, error: phoneCheckError } = await supabase
+        .from("estimates")
+        .select("phone_number")
+        .eq("phone_number", values.phone_number)
+        .maybeSingle();
+
+      if (phoneCheckError) throw phoneCheckError;
+
+      if (existingPhone) {
+        form.setError("phone_number", {
+          type: "manual",
+          message: "This phone number has already been used.",
+        });
+
+        toast({
+          title: "Duplicate Phone Number",
+          description: "This phone number is already registered. Try another.",
+          variant: "destructive",
+        });
+
+        setLoading(false);
+        return;
+      }
+
+      // Upload floor plan if it's a File
       let floorPlanUrl = "";
 
       if (formData.floor_plan_url instanceof File) {
@@ -69,7 +123,8 @@ export function StepFour({ onNext, onBack }: { onNext: () => void; onBack: () =>
           .from("floorplans")
           .upload(`floorplans/${Date.now()}_${file.name}`, file);
 
-        if (uploadError) throw new Error("Upload failed: " + uploadError.message);
+        if (uploadError)
+          throw new Error("Upload failed: " + uploadError.message);
 
         const { data: urlData } = supabase.storage
           .from("floorplans")
@@ -86,7 +141,9 @@ export function StepFour({ onNext, onBack }: { onNext: () => void; onBack: () =>
         floor_plan_url: floorPlanUrl,
       };
 
-      const { data, error } = await supabase.from("estimates").insert([finalData]);
+      const { data, error } = await supabase
+        .from("estimates")
+        .insert([finalData]);
 
       if (error) throw error;
 
@@ -125,20 +182,26 @@ export function StepFour({ onNext, onBack }: { onNext: () => void; onBack: () =>
       <div className="space-y-4">
         {/* Full Name */}
         <div>
-          <label className="text-sm font-medium text-[#1E1FBF]">Full Name</label>
+          <label className="text-sm font-medium text-[#1E1FBF]">
+            Full Name
+          </label>
           <Input
             placeholder="Your Full Name"
             {...form.register("full_name")}
             className="rounded-md border-[#d0d0ff] focus:border-[#1E1FBF] focus:ring-1 focus:ring-[#1E1FBF]"
           />
           {form.formState.errors.full_name && (
-            <ErrorMessage message={form.formState.errors.full_name.message || ""} />
+            <ErrorMessage
+              message={form.formState.errors.full_name.message || ""}
+            />
           )}
         </div>
 
         {/* Email */}
         <div>
-          <label className="text-sm font-medium text-[#1E1FBF]">Email Address</label>
+          <label className="text-sm font-medium text-[#1E1FBF]">
+            Email Address
+          </label>
           <Input
             placeholder="you@example.com"
             {...form.register("email")}
@@ -151,7 +214,9 @@ export function StepFour({ onNext, onBack }: { onNext: () => void; onBack: () =>
 
         {/* Phone Number */}
         <div>
-          <label className="text-sm font-medium text-[#1E1FBF]">Phone Number</label>
+          <label className="text-sm font-medium text-[#1E1FBF]">
+            Phone Number
+          </label>
           <Input
             type="tel"
             placeholder="Enter your phone number"
@@ -159,7 +224,9 @@ export function StepFour({ onNext, onBack }: { onNext: () => void; onBack: () =>
             className="rounded-md border-[#d0d0ff] focus:border-[#1E1FBF] focus:ring-1 focus:ring-[#1E1FBF]"
           />
           {form.formState.errors.phone_number && (
-            <ErrorMessage message={form.formState.errors.phone_number.message || ""} />
+            <ErrorMessage
+              message={form.formState.errors.phone_number.message || ""}
+            />
           )}
         </div>
 

@@ -20,7 +20,7 @@ function SuccessScreen({ onRestart, onBack }: SuccessScreenProps) {
         </p>
         <button
           onClick={onRestart}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="px-4 py-2 bg-[#1e1fbf] text-white rounded-md hover:bg-blue-700"
         >
           Start a New Estimate
         </button>

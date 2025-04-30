@@ -1,3 +1,13 @@
+// emails/ContactFormEmail.tsx
+import {
+  Html,
+  Head,
+  Body,
+  Container,
+  Text,
+  Heading,
+  Link,
+} from "@react-email/components";
 import * as React from "react";
 
 interface ContactFormEmailProps {
@@ -11,7 +21,7 @@ interface ContactFormEmailProps {
   preferences: string;
 }
 
-export const ContactFormEmail: React.FC<Readonly<ContactFormEmailProps>> = ({
+export default function ContactFormEmail({
   full_name,
   email,
   phone_number,
@@ -20,37 +30,33 @@ export const ContactFormEmail: React.FC<Readonly<ContactFormEmailProps>> = ({
   floor_plan_url,
   additional_notes,
   preferences,
-}) => (
-  <div style={{ fontFamily: "Arial, sans-serif", lineHeight: "1.6", color: "#333" }}>
-    <h1 style={{ color: "#4F46E5" }}>🏠 New Interior Estimate Request</h1>
+}: ContactFormEmailProps) {
+  return (
+    <Html>
+      <Head />
+      <Body style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#f9f9f9", padding: "20px" }}>
+        <Container style={{ backgroundColor: "#ffffff", padding: "20px", borderRadius: "8px" }}>
+          <Heading style={{ fontSize: "24px", marginBottom: "20px" }}>New Estimate Request</Heading>
 
-    <p>
-      <strong>Full Name:</strong> {full_name} <br />
-      <strong>Email:</strong> {email} <br />
-      <strong>Phone Number:</strong> {phone_number}
-    </p>
+          <Text><strong>Full Name:</strong> {full_name}</Text>
+          <Text><strong>Email:</strong> {email}</Text>
+          <Text><strong>Phone Number:</strong> {phone_number}</Text>
+          <Text><strong>BHK:</strong> {bhk}</Text>
+          <Text><strong>Location:</strong> {location}</Text>
 
-    <hr style={{ margin: "20px 0" }} />
+          <Text>
+            <strong>Floor Plan URL:</strong>{" "}
+            <Link href={floor_plan_url}>{floor_plan_url}</Link>
+          </Text>
 
-    <h2>📋 Property & Design Details</h2>
-    <p>
-      <strong>BHK Type:</strong> {bhk} <br />
-      <strong>Location:</strong> {location} <br />
-      <strong>Floor Plan:</strong> {floor_plan_url} <br />
-      <strong>Design Preference:</strong> {preferences}
-    </p>
+          <Text><strong>Preferences:</strong> {preferences}</Text>
+          <Text><strong>Additional Notes:</strong> {additional_notes}</Text>
 
-    {additional_notes && (
-      <>
-        <h2>📝 Additional Notes</h2>
-        <p>{additional_notes}</p>
-      </>
-    )}
-
-    <hr style={{ margin: "20px 0" }} />
-
-    <footer style={{ fontSize: "12px", color: "#777" }}>
-      This email was sent from your interior design website's estimate form.
-    </footer>
-  </div>
-);
+          <Text style={{ marginTop: "30px", fontSize: "12px", color: "#666" }}>
+            Sent automatically via Future Interior Get Estimate form.
+          </Text>
+        </Container>
+      </Body>
+    </Html>
+  );
+}

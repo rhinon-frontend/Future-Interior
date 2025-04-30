@@ -39,8 +39,6 @@ const Header = () => {
             alt={altText}
             fill
             priority
-            placeholder="blur"
-            blurDataURL="/blur-placeholder.png"
             sizes="100vw"
             className="object-cover"
             loading="eager"

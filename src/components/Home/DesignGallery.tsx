@@ -63,8 +63,6 @@ const DesignGallery = () => {
                         width={500}
                         height={500}
                         loading="lazy"
-                        placeholder="blur"
-                        blurDataURL="/placeholder.png"
                         className="w-full h-full object-cover aspect-square transition-transform duration-300 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />

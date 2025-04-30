@@ -1,12 +1,16 @@
 import ContactFormEmail from "@/emails/ContactFormEmail";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.NEXT_RESEND_API_KEY);
-
 export async function POST(req: Request) {
+  if (!process.env.NEXT_RESEND_API_KEY) {
+    console.error("❌ NEXT_RESEND_API_KEY is missing");
+    return Response.json({ error: "Missing API key" }, { status: 500 });
+  }
+
+  const resend = new Resend(process.env.NEXT_RESEND_API_KEY);
+
   try {
     const body = await req.json();
-
     const {
       full_name,
       email,
@@ -18,7 +22,6 @@ export async function POST(req: Request) {
       preferences,
     } = body;
 
-    // ✅ Pass the data into your email template
     await resend.emails.send({
       from: "onboarding@resend.dev",
       to: "frontend@rhinontech.com",
@@ -37,6 +40,7 @@ export async function POST(req: Request) {
 
     return Response.json({ success: true });
   } catch (error) {
+    console.error("Email error:", error);
     return Response.json({ error: String(error) }, { status: 500 });
   }
 }
